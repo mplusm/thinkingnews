@@ -1,4 +1,6 @@
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import CookieConsent from '@/components/CookieConsent'
 import NewsCard from '@/components/NewsCard'
 import { fetchNews } from '@/lib/api'
 import { Article } from '@/lib/types'
@@ -46,11 +48,8 @@ export default async function Home() {
         )}
       </main>
 
-      <footer className="border-t border-zinc-800 py-6 mt-8">
-        <div className="max-w-4xl mx-auto px-4 text-center text-zinc-500 text-sm">
-          <p>ThinkingNews - AI-powered tech news summaries</p>
-        </div>
-      </footer>
+      <Footer />
+      <CookieConsent />
     </div>
   )
 }
