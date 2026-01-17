@@ -1,0 +1,9 @@
+# ThinkingNews robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://tn.thinkingdbx.com/sitemap.xml
+
+# RSS Feed
+# https://tn.thinkingdbx.com/feed.xml

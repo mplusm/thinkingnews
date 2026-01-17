@@ -4,6 +4,7 @@ import { Article } from '@/lib/types'
 import { ExternalLink, Bookmark } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 interface NewsCardProps {
   article: Article
@@ -49,7 +50,9 @@ export default function NewsCard({ article }: NewsCardProps) {
       </div>
 
       <h2 className="text-lg font-semibold text-white mb-3 line-clamp-2 leading-tight">
-        {article.title}
+        <Link href={`/article/${article.id}`} className="hover:text-yellow-500 transition-colors">
+          {article.title}
+        </Link>
       </h2>
 
       {article.summary && (
