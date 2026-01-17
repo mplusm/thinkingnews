@@ -2,30 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+/* Dark theme (default) */
+:root,
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-border: #27272a;
+  --muted: #71717a;
+}
+
+/* Light theme */
+.light {
+  --background: #fafafa;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-border: #e4e4e7;
+  --muted: #71717a;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  transition: background-color 0.2s, color 0.2s;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
+/* Light mode overrides using CSS variables */
+.light {
+  background-color: #fafafa;
+  color: #09090b;
+}
+
+.light .bg-zinc-950 {
+  background-color: #fafafa !important;
+}
+
+.light .bg-zinc-900 {
+  background-color: #ffffff !important;
+}
+
+.light .bg-zinc-800 {
+  background-color: #f4f4f5 !important;
+}
+
+.light .border-zinc-800 {
+  border-color: #e4e4e7 !important;
+}
+
+.light .border-zinc-700 {
+  border-color: #d4d4d8 !important;
+}
+
+.light .text-white {
+  color: #18181b !important;
+}
+
+.light .text-zinc-400 {
+  color: #52525b !important;
+}
+
+.light .text-zinc-500 {
+  color: #71717a !important;
+}
+
+.light .text-zinc-300 {
+  color: #3f3f46 !important;
+}
+
+.light .hover\:bg-zinc-800:hover {
+  background-color: #e4e4e7 !important;
+}
+
+.light .hover\:border-zinc-700:hover {
+  border-color: #d4d4d8 !important;
+}
+
+/* Custom scrollbar - Dark */
+.dark ::-webkit-scrollbar {
   width: 8px;
 }
 
-::-webkit-scrollbar-track {
+.dark ::-webkit-scrollbar-track {
   background: #1a1a1a;
 }
 
-::-webkit-scrollbar-thumb {
+.dark ::-webkit-scrollbar-thumb {
   background: #333;
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #444;
+}
+
+/* Custom scrollbar - Light */
+.light ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #f4f4f5;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 4px;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa;
 }

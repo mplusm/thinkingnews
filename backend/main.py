@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Depends, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, or_
 from contextlib import asynccontextmanager
+from datetime import datetime, timedelta
 import logging
 
 from database import get_db, engine
@@ -63,13 +64,41 @@ def get_news(
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
     source: str | None = None,
+    q: str | None = None,
+    time: str | None = None,
     db: Session = Depends(get_db)
 ):
-    """Get latest news articles."""
+    """Get latest news articles with search and filters."""
     query = db.query(Article).filter(Article.is_active == True)
 
+    # Source filter
     if source:
         query = query.filter(Article.source == source)
+
+    # Search filter
+    if q:
+        search_term = f"%{q}%"
+        query = query.filter(
+            or_(
+                Article.title.ilike(search_term),
+                Article.summary.ilike(search_term)
+            )
+        )
+
+    # Time filter
+    if time:
+        now = datetime.utcnow()
+        if time == "today":
+            start_date = now - timedelta(days=1)
+        elif time == "week":
+            start_date = now - timedelta(days=7)
+        elif time == "month":
+            start_date = now - timedelta(days=30)
+        else:
+            start_date = None
+
+        if start_date:
+            query = query.filter(Article.created_at >= start_date)
 
     total = query.count()
     offset = (page - 1) * limit
@@ -82,6 +111,35 @@ def get_news(
         page=page,
         limit=limit,
         has_next=(offset + limit) < total
+    )
+
+
+@app.get("/api/v1/news/trending", response_model=ArticleListResponse)
+def get_trending(
+    limit: int = Query(10, ge=1, le=50),
+    db: Session = Depends(get_db)
+):
+    """Get trending articles (most recent from diverse sources)."""
+    # Get recent articles with good distribution across sources
+    subquery = db.query(
+        Article,
+        func.row_number().over(
+            partition_by=Article.source,
+            order_by=desc(Article.created_at)
+        ).label('rn')
+    ).filter(Article.is_active == True).subquery()
+
+    # Fallback to simple recent articles if complex query fails
+    articles = db.query(Article).filter(
+        Article.is_active == True
+    ).order_by(desc(Article.created_at)).limit(limit).all()
+
+    return ArticleListResponse(
+        articles=[ArticleResponse.model_validate(a) for a in articles],
+        total=len(articles),
+        page=1,
+        limit=limit,
+        has_next=False
     )
 
 

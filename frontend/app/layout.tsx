@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Space_Grotesk } from 'next/font/google'
 import Script from 'next/script'
+import { ThemeProvider } from '@/components/ThemeProvider'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -81,7 +82,9 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${inter.className} ${spaceGrotesk.variable}`}>{children}</body>
+      <body className={`${inter.className} ${spaceGrotesk.variable}`}>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   )
 }

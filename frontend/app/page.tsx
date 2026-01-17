@@ -1,8 +1,8 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CookieConsent from '@/components/CookieConsent'
-import NewsCard from '@/components/NewsCard'
-import { fetchNews } from '@/lib/api'
+import NewsFeed from '@/components/NewsFeed'
+import { fetchNews, fetchSources } from '@/lib/api'
 import { Article } from '@/lib/types'
 import { RefreshCw } from 'lucide-react'
 
@@ -10,11 +10,18 @@ export const revalidate = 60 // Revalidate every 60 seconds
 
 export default async function Home() {
   let articles: Article[] = []
+  let total = 0
+  let sources: string[] = []
   let error: string | null = null
 
   try {
-    const data = await fetchNews(1, 50)
-    articles = data.articles
+    const [newsData, sourcesData] = await Promise.all([
+      fetchNews({ page: 1, limit: 20 }),
+      fetchSources()
+    ])
+    articles = newsData.articles
+    total = newsData.total
+    sources = sourcesData.map(s => s.name)
   } catch (e) {
     error = 'Failed to load news. Please try again later.'
   }
@@ -34,17 +41,12 @@ export default async function Home() {
               <RefreshCw size={16} /> Refresh
             </a>
           </div>
-        ) : articles.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-zinc-400 mb-2">No news articles yet.</p>
-            <p className="text-zinc-500 text-sm">Check back soon!</p>
-          </div>
         ) : (
-          <div className="grid gap-4">
-            {articles.map((article) => (
-              <NewsCard key={article.id} article={article} />
-            ))}
-          </div>
+          <NewsFeed
+            initialArticles={articles}
+            initialTotal={total}
+            sources={sources}
+          />
         )}
       </main>
 

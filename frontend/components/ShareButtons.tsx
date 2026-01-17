@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Twitter, Linkedin, Facebook, Link2, Check } from 'lucide-react'
+import { Twitter, Linkedin, Facebook, Link2, Check, MessageCircle, Send } from 'lucide-react'
 
 interface ShareButtonsProps {
   url: string
@@ -14,11 +14,14 @@ export default function ShareButtons({ url, title, compact = false }: ShareButto
 
   const encodedUrl = encodeURIComponent(url)
   const encodedTitle = encodeURIComponent(title)
+  const encodedText = encodeURIComponent(`${title}\n${url}`)
 
   const shareLinks = {
     twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    whatsapp: `https://wa.me/?text=${encodedText}`,
+    telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
   }
 
   const copyToClipboard = async () => {
@@ -68,6 +71,26 @@ export default function ShareButtons({ url, title, compact = false }: ShareButto
         title="Share on Facebook"
       >
         <Facebook size={iconSize} />
+      </a>
+      <a
+        href={shareLinks.whatsapp}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${buttonClass} hover:text-green-500`}
+        aria-label="Share on WhatsApp"
+        title="Share on WhatsApp"
+      >
+        <MessageCircle size={iconSize} />
+      </a>
+      <a
+        href={shareLinks.telegram}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${buttonClass} hover:text-blue-400`}
+        aria-label="Share on Telegram"
+        title="Share on Telegram"
+      >
+        <Send size={iconSize} />
       </a>
       <button
         onClick={copyToClipboard}
