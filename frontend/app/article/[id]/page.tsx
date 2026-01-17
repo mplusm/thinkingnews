@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowLeft, ExternalLink, Clock } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import ShareButtons from '@/components/ShareButtons'
 import { Article } from '@/lib/types'
 
 const API_URL = 'http://127.0.0.1:8001'
@@ -145,15 +146,22 @@ export default async function ArticlePage({ params }: { params: { id: string } }
             </div>
           )}
 
-          <div className="mt-8 pt-6 border-t border-zinc-800">
+          <div className="mt-8 pt-6 border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <a
               href={article.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-400 transition-colors font-medium"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-400 transition-colors font-medium w-fit"
             >
               Read full article <ExternalLink size={16} />
             </a>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-zinc-500">Share:</span>
+              <ShareButtons
+                url={`https://tn.thinkingdbx.com/article/${article.id}`}
+                title={article.title}
+              />
+            </div>
           </div>
         </article>
       </main>

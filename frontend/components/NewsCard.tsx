@@ -5,6 +5,7 @@ import { ExternalLink, Bookmark } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import ShareButtons from './ShareButtons'
 
 interface NewsCardProps {
   article: Article
@@ -62,7 +63,14 @@ export default function NewsCard({ article }: NewsCardProps) {
       )}
 
       <div className="flex justify-between items-center text-xs text-zinc-500">
-        <span>{timeAgo}</span>
+        <div className="flex items-center gap-3">
+          <span>{timeAgo}</span>
+          <ShareButtons
+            url={`https://tn.thinkingdbx.com/article/${article.id}`}
+            title={article.title}
+            compact
+          />
+        </div>
         <a
           href={article.url}
           target="_blank"
